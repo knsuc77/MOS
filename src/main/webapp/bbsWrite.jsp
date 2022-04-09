@@ -89,7 +89,7 @@
       
 
       <div class="table-responsive custom-table-responsive">
-		<form action="WriteAction.jsp">
+		<form action="WriteAction.jsp" method="post" enctype="multipart/form-data">
 		<table style="text-align: center; height: 500px" class="table custom-table">
 	          <tbody>
 	          	<tr>

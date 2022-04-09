@@ -7,10 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
@@ -33,13 +38,85 @@ public class BBSDAO {
 		}
 	}
 	
-	public int postBBS(String table, String author, String title, String context, HttpServletRequest request) {
-		String sql = "insert into " + table + " values(?, ?, ?, ?, ?, ?)";
+	public String requestFilePath(String table, int bbsid, String fileName, HttpServletRequest request) {
+		String realPath = "";
+		String savePath = "attached";
+		
+		ServletContext context = request.getServletContext();
+		realPath = context.getRealPath(savePath);
+		System.out.println("request : "+ realPath);
+		return realPath + File.separator + table + "_" + bbsid + "_" + fileName;
+	}
+	
+	public String postBBS(String userid, HttpServletRequest request) {
 		try {
+			
+			
+			//파일 업로드 -->
+			
+			String realPath = "";
+			String savePath = "attached";
+			String type = "utf-8";
+			int maxSize = 10*1024*1024;
+			
+			ServletContext context = request.getServletContext();
+			realPath = context.getRealPath(savePath);
+			
+			File folder = new File(realPath);
+			if(!folder.exists()) folder.mkdirs();
+			
+			
+			DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
+			diskFileItemFactory.setRepository(new File(realPath));
+			diskFileItemFactory.setSizeThreshold(maxSize);
+			diskFileItemFactory.setDefaultCharset("utf-8");
+			ServletFileUpload fileUpload = new ServletFileUpload(diskFileItemFactory);
+			
+			List<FileItem> items = fileUpload.parseRequest(request);
+			
+			//파라미터 분류 -->
+			List<FileItem> rawfiles = new ArrayList<>();
+			HashMap<String, FileItem> hashmap = new HashMap<>();
+			
+			
+			for(FileItem item : items) {
+				if(item.isFormField())
+					hashmap.put(item.getFieldName(), item);
+				else {
+					rawfiles.add(item);
+				}
+			}
+			
+			//테이블 종류 구분 -->
+			String table = null;
+			switch(hashmap.get("bbsType").getString()) {
+			case "공지사항":
+				table = "notis";
+				break;
+			case "족보":
+				table = "testsolution";
+				break;
+			case "집행내역":
+				table = "receipt";
+				break;
+			}
+			
+			//새로운 글 번호 추출 -->
 			int id = getNext(table);
 			
+			//파일 분류 -- >
 			List<String> files = new ArrayList<>();
-			
+			for(FileItem item : rawfiles) {
+				if(item.getSize() > 0) {
+					String separator = File.separator;
+					int index = item.getName().lastIndexOf(separator);
+					String fileName = item.getName().substring(index+1);
+					File uploadFile = new File(realPath + separator + table + "_" + id + "_" + fileName);
+					files.add(fileName);
+					System.out.println("save Path : " + uploadFile.getAbsolutePath());
+					item.write(uploadFile);
+				}
+			}
 			
 			String attached = null;
 			if(!files.isEmpty()) {
@@ -49,20 +126,29 @@ public class BBSDAO {
 				}
 			}
 			
+			//작성자 이름 분류 -->
+			
+			String author = new UserDAO().getName(userid) + "(" + userid + ")";
+			
+			//SQL 작업 시작 -->
+			
+			String sql = "insert into " + table + " values(?, ?, ?, ?, ?, ?)";
+			
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, id);
-			pstmt.setString(2, title);
+			pstmt.setString(2, hashmap.get("bbsTitle").getString());
 			pstmt.setString(3, author);
 			pstmt.setString(4, getDate());
-			pstmt.setString(5, context);
+			pstmt.setString(5, hashmap.get("bbsContext").getString());
 			pstmt.setString(6, attached);
 			
 			
-			return pstmt.executeUpdate();
+			pstmt.executeUpdate();
+			return table;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return null;
 	}
 	
 	public int deleteBBS(String table, String userid, int bbsid) {
@@ -171,20 +257,5 @@ public class BBSDAO {
 		}
 		return null;
 	}
-	/*
-	 * <!--  -->
-            <tr>
-              <td>
-                1392
-              </td>
-              <td><a href="#">James Yates</a></td>
-              <td>
-                Web Designer
-              </td>
-              <td>+63 983 0962 971</td>
-            </tr>
-            <!--  -->
-            <tr class="spacer"><td colspan="100"></td></tr>
-	 */
 	
 }

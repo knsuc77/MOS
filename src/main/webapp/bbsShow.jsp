@@ -100,7 +100,10 @@
 						if(bbsdata[4] == null){
 							out.write("첨부파일이 없습니다.");
 						} else {
-							out.write(bbsdata[4]);
+							String[] files = bbsdata[4].split(",");
+							for(String line : files){
+								out.write("<a href=\"Filedownload.jsp?filename="+line+"&name="+name+"&id="+bbsid+"\">"+line+"<br>");
+							}
 						}
 	         		%></td>
 	         	</tr>
