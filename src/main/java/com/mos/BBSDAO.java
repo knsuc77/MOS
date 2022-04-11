@@ -110,7 +110,7 @@ public class BBSDAO {
 				if(item.getSize() > 0) {
 					String separator = File.separator;
 					int index = item.getName().lastIndexOf(separator);
-					String fileName = item.getName().substring(index+1);
+					String fileName = item.getName().substring(index+1).replaceAll("\\[", "").replaceAll("\\]", "");
 					File uploadFile = new File(realPath + separator + table + "_" + id + "_" + fileName);
 					files.add(fileName);
 					System.out.println("save Path : " + uploadFile.getAbsolutePath());

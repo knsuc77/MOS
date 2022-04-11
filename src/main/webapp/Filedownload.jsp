@@ -13,6 +13,7 @@
 </head>
 <body>
 	<%
+		request.setCharacterEncoding("UTF-8");
 		String fileName = request.getParameter("filename");
 		String table = request.getParameter("name");
 		int bbsid = Integer.parseInt(request.getParameter("id"));
@@ -32,13 +33,13 @@
 		
 		response.setContentType(sMimeType);
 		
-		String A = new String(fileName.getBytes("euc-kr"), "8859_1");
-		String B = "utf-8";
-		String sEncoding = URLEncoder.encode(A,B);
+		String A = new String(fileName.getBytes("utf-8"), "iso-8859-1");
 		
 		String AA = "Content-Disposition";
-		String BB = "attachment; filename="+sEncoding;
+		String BB = "attachment; filename="+A;
 		response.setHeader(AA, BB);
+		response.setHeader("Content-Type", "application/octec-stream; charset=UTF-8");
+		response.setHeader("Content-Length", ""+oFile.length());
 		
 		ServletOutputStream out2 = response.getOutputStream();
 		
