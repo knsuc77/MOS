@@ -30,7 +30,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link" href="bbs.jsp?name=notis">공지사항</a></li>
-                        <li class="nav-item"><a class="nav-link" href="gallery.jsp">사진첩</a></li>
+                        <li class="nav-item"><a class="nav-link" href="bbs.jsp?name=gallery">사진첩</a></li>
                         <%
                         	if(session.getAttribute("userID") != null){
                         		out.write("<li class=\"nav-item\"><a class=\"nav-link\" href=\"bbs.jsp?name=testsolution\">족보</a></li>");
