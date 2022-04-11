@@ -6,7 +6,7 @@
 <%@ page import="java.net.URLEncoder" %>
 <%@page import="java.io.PrintWriter"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>MOS</title>
@@ -32,8 +32,9 @@
 		
 		response.setContentType(sMimeType);
 		
-		String A = new String(fileName.getBytes("utf-8"));
-		String sEncoding = URLEncoder.encode(A);
+		String A = new String(fileName.getBytes("euc-kr"), "8859_1");
+		String B = "utf-8";
+		String sEncoding = URLEncoder.encode(A,B);
 		
 		String AA = "Content-Disposition";
 		String BB = "attachment; filename="+sEncoding;

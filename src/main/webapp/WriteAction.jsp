@@ -5,7 +5,7 @@
 <%@ page import="com.mos.UserDAO" %>
 <% request.setCharacterEncoding("utf-8"); %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>MOS</title>

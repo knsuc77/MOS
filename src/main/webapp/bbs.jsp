@@ -5,7 +5,7 @@
 <%@page import="com.mos.BBSDAO"%>
 <%@page import="java.util.List" %>
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">

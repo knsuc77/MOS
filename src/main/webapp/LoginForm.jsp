@@ -4,7 +4,7 @@
 <%@page import="java.io.PrintWriter"%>
 <%@page import="com.mos.UserDAO"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta charset="utf-8">

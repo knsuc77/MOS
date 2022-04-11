@@ -12,7 +12,7 @@
 <jsp:setProperty name="user" property="userPasswordcheck"/>
 <!DOCTYPE html>
 
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>MOS</title>
