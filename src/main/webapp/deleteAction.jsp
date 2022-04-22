@@ -21,7 +21,7 @@
 		script.println("history.back()");
 		script.println("</script>");
 	}
-	int delete = dao.deleteBBS(name, id, Integer.parseInt(bbsid));
+	int delete = dao.deleteBBS(name, id, Integer.parseInt(bbsid), request);
 	if(delete == 0){
 		script.println("<script>");
 		script.println("location.href='bbs.jsp?name="+name+"'");

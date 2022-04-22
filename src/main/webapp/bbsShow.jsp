@@ -3,6 +3,7 @@
     <%@page import="java.io.PrintWriter"%>
 <%@page import="com.mos.BBSDAO"%>
 <%@page import="com.mos.UserDAO"%>
+<%@ page import="java.net.URLEncoder" %>
 <%@page import="java.util.List" %>
 <!doctype html>
 <html lang="ko">
@@ -91,30 +92,30 @@
 		
 	</h2>
       <div class="table-responsive custom-table-responsive">
-		<table style="text-align: center; height: 500px; font-color:white;" class="table custom-table">
+		<table style="text-align: center; height: 500px;" class="table custom-table">
 	          <tbody>
 	         	<tr>
-	         		<td width="15%">제목</td>
-	         		<td width="85%"><% out.write(bbsdata[0]); %></td>
+	         		<td width="15%"><label style="color:white;">제목</label></td>
+	         		<td width="85%"><label style="color:white;"><% out.write(bbsdata[0]); %></label></td>
 	         	</tr>
 	         	<tr>
-	         		<td width="15%">첨부파일</td>
-	         		<td width="85%"><% 
+	         		<td width="15%"><label style="color:white;">첨부파일</label></td>
+	         		<td width="85%"><label style="color:white;"><% 
 						if(bbsdata[4] == null){
 							out.write("첨부파일이 없습니다.");
 						} else {
 							String[] files = bbsdata[4].split(",");
 							for(String line : files){
-								out.write("<a href=\"Filedownload.jsp?filename="+line+"&name="+name+"&id="+bbsid+"\">"+line+"<br>");
+								out.write("<a href=\"Filedownload.jsp?filename="+URLEncoder.encode(line,"UTF-8")+"&name="+name+"&id="+bbsid+"\">"+line+"<br>");
 							}
 						}
-	         		%></td>
+	         		%></label></td>
 	         	</tr>
-	         	<tr>
-	         		<td width="15%">내용</td>
-	         		<td height="85%" width="85%"><textarea class="form-control" style="font-color:black;"name="bbsContext" rows="30%" readonly>
+	         	<tr style="border-top: 1px solid white;">
+	         		<td height="85%" width="100%" colspan='2' style="text-align:left; padding: 20px 50px 20px 50px;"><label style="color:white;">
 	         			<% out.write(bbsdata[3]); %>
-	         		</textarea></td>
+	         			</label>
+	         		</td>
 	         	</tr>
 	         	<%
 	         		if(new BBSDAO().isAuthor(name, id, Integer.parseInt(bbsid)) == 0){

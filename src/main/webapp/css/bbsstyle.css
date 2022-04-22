@@ -38,7 +38,7 @@ h2 {
     padding-top: 20px;
     font-weight: 300; }
     .custom-table tbody th small, .custom-table tbody td small {
-      color: #b3b3b3;
+      color: #fff;
       font-weight: 300; }
   .custom-table tbody tr:not(.spacer) {
     border-radius: 7px;
@@ -56,7 +56,7 @@ h2 {
     -o-transition: .3s all ease;
     transition: .3s all ease; }
     .custom-table tbody tr th a, .custom-table tbody tr td a {
-      color: #b3b3b3; }
+      color: #fff; }
     .custom-table tbody tr th:first-child, .custom-table tbody tr td:first-child {
       border-top-left-radius: 0px;
       border-bottom-left-radius: 0px; }
@@ -84,8 +84,7 @@ h2 {
 
 .control input {
   position: absolute;
-  z-index: -1;
-  opacity: 0; }
+  z-index: -1;}
 
 .control__indicator {
   position: absolute;
@@ -110,7 +109,6 @@ h2 {
 
 .control input:disabled ~ .control__indicator {
   background: #e6e6e6;
-  opacity: 0.6;
   pointer-events: none;
   border: 2px solid #ccc; }
 
@@ -136,5 +134,4 @@ h2 {
 
 .control--checkbox input:disabled:checked ~ .control__indicator {
   background-color: #007bff;
-  opacity: .2;
   border: 2px solid #007bff; }

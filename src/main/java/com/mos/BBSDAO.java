@@ -44,8 +44,9 @@ public class BBSDAO {
 		
 		ServletContext context = request.getServletContext();
 		realPath = context.getRealPath(savePath);
-		System.out.println("request : "+ realPath);
-		return realPath + File.separator + table + "_" + bbsid + "_" + fileName;
+		String filePath = realPath + File.separator + table + "_" + bbsid + "_" + fileName;
+		System.out.println("Downloaded : " + filePath);
+		return filePath;
 	}
 	
 	public String postBBS(String userid, HttpServletRequest request) {
@@ -110,10 +111,10 @@ public class BBSDAO {
 				if(item.getSize() > 0) {
 					String separator = File.separator;
 					int index = item.getName().lastIndexOf(separator);
-					String fileName = item.getName().substring(index+1).replaceAll("\\[", "").replaceAll("\\]", "");
+					String fileName = item.getName().substring(index+1).replaceAll("%", "").replaceAll("\\+", "");
 					File uploadFile = new File(realPath + separator + table + "_" + id + "_" + fileName);
 					files.add(fileName);
-					System.out.println("save Path : " + uploadFile.getAbsolutePath());
+					System.out.println("Uploaded : " + uploadFile.getAbsolutePath());
 					item.write(uploadFile);
 				}
 			}
@@ -125,7 +126,6 @@ public class BBSDAO {
 					attached += ","+files.get(i);
 				}
 			}
-			
 			//작성자 이름 분류 -->
 			
 			String author = new UserDAO().getName(userid) + "(" + userid + ")";
@@ -139,7 +139,7 @@ public class BBSDAO {
 			pstmt.setString(2, hashmap.get("bbsTitle").getString());
 			pstmt.setString(3, author);
 			pstmt.setString(4, getDate());
-			pstmt.setString(5, hashmap.get("bbsContext").getString());
+			pstmt.setString(5, hashmap.get("bbsContext").getString().replaceAll("\n", "<br>"));
 			pstmt.setString(6, attached);
 			
 			
@@ -151,9 +151,19 @@ public class BBSDAO {
 		return null;
 	}
 	
-	public int deleteBBS(String table, String userid, int bbsid) {
+	public int deleteBBS(String table, String userid, int bbsid,  HttpServletRequest request) {
 		int check = isAuthor(table, userid, bbsid);
 		if(check != 0) return check;
+		
+		String savePath = "attached";
+		ServletContext context = request.getServletContext();
+		String realPath = context.getRealPath(savePath);
+		
+		for(File file : new File(realPath).listFiles()) {
+			if(file.getName().startsWith(table + "_" + bbsid))
+				file.delete();
+		}
+		
 		String sql = "delete from " + table + " where ID = ?";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
